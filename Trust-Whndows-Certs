@@ -1,0 +1,88 @@
+em Title : Firefox Windows Trust Script
+rem Objective : This script changes the default settings of Firefox to trust the Windows Certificate Authority (the same one as Google and IE). 
+rem Author : Andrew Valenski
+rem Date : 01/14/2019
+
+ECHO OFF
+ECHO STARTING PROCESS TO ALLOW FIREFOX TO WORK USING HTTPS
+ECHO SCRIPT WRITTEN BY ANDREW VALENSKI
+ECHO ------------------------
+
+IF EXIST "C:\Program Files (x86)\Mozilla Firefox\defaults\pref\" (
+    ECHO 64-BIT FIREFOX FOUND. CREATING CONFIGURATION FILE.
+    ECHO ------------------------
+    ECHO pref('security.enterprise_roots.enabled' , true^); >"C:\Program Files (x86)\Mozilla Firefox\defaults\pref\enableSSL.js"
+    IF EXIST "C:\Program Files (x86)\Mozilla Firefox\defaults\pref\enableSSL.js" (
+        ECHO FILE SUCCESSFULLY CREATED. RESTARTING FIREFOX.
+        PING 1.1.1.1 -n 1 -w 2000 >NUL
+        ECHO ------------------------
+        TASKLIST /nh /fi "imagename eq firefox.exe" | find /i "firefox.exe" >nul && (
+            ECHO FIREFOX IS RUNNING. STOPPING NOW TO APPLY CHANGES.
+            TSKILL "firefox"
+            PING 1.1.1.1 -n 1 -w 5000 >NUL
+            ECHO SUCCESSFULLY CONFIGURED FIREFOX. STARTING FIREFOX NOW.
+            START "C:\Program Files (x86)\Mozilla Firefox\firefox.exe" ECHO FIREFOX IS WORKING. CLOSE THIS WINDOW AND OPEN FIREFOX.
+            ECHO FIREFOX RUNNING.
+        ) || (
+            ECHO FIREFOX IS NOT RUNNING. APPLYING CHANGES.
+            PING 1.1.1.1 -n 1 -w 5000 >NUL
+            ECHO SUCCESSFULLY CONFIGURED FIREFOX. STARTING FIREFOX NOW.
+            START "C:\Program Files (x86)\Mozilla Firefox\firefox.exe" ECHO FIREFOX IS WORKING. CLOSE THIS WINDOW AND OPEN FIREFOX.
+			PING 1.1.1.1 -n 1 -w 1000 >NUL
+			TSKILL "firefox"
+            ECHO FIREFOX CONFIGURED.
+        )
+    ) ELSE (
+        ECHO *-*-*-*-*-*-*-*-*-*-*-*
+        ECHO UNABLE TO CREATE FILE. CONFIRM THAT YOU HAVE APPROPRIATE PERMISSIONS TO WRITE TO THIS DIRECTORY.
+        ECHO *-*-*-*-*-*-*-*-*-*-*-*
+    ) 
+) 
+    
+IF EXIST "C:\Program Files\Mozilla Firefox\defaults\pref" (
+    ECHO 32-BIT FIREFOX FOUND. CREATING CONFIGURATION FILE.
+    ECHO ------------------------
+    ECHO pref('security.enterprise_roots.enabled' , true^); >"C:\Program Files\Mozilla Firefox\defaults\pref\enableSSL.js"
+    IF EXIST "C:\Program Files\Mozilla Firefox\defaults\pref\enableSSL.js" (
+        ECHO FILE SUCCESSFULLY CREATED. RESTARTING FIREFOX.
+        ECHO ------------------------
+        TASKLIST /nh /fi "imagename eq firefox.exe" | find /i "firefox.exe" >nul && (
+            ECHO FIREFOX IS RUNNING. STOPPING NOW TO APPLY CHANGES.
+            TSKILL "firefox"
+            PING 1.1.1.1 -n 1 -w 5000 >NUL
+            ECHO SUCCESSFULLY CONFIGURED FIREFOX. STARTING FIREFOX NOW.
+            START "C:\Program Files\Mozilla Firefox\firefox.exe" ECHO FIREFOX IS WORKING. CLOSE THIS WINDOW AND OPEN FIREFOX.
+            ECHO FIREFOX RUNNING.
+        ) || (
+			ECHO FIREFOX IS NOT RUNNING. APPLYING CHANGES.
+			ECHO ------------------------
+			PING 1.1.1.1 -n 1 -w 5000 >NUL
+			ECHO SUCCESSFULLY CONFIGURED FIREFOX. STARTING FIREFOX NOW.
+			START "C:\Program Files\Mozilla Firefox\firefox.exe" ECHO FIREFOX IS WORKING. CLOSE THIS WINDOW AND OPEN FIREFOX.
+			PING 1.1.1.1 -n 1 -w 1000 >NUL
+			TSKILL "firefox"
+            ECHO FIREFOX CONFIGURED.
+			ECHO FIREFOX RUNNING.
+        )
+    ) ELSE (
+        ECHO *-*-*-*-*-*-*-*-*-*-*-*
+        ECHO UNABLE TO CREATE FILE. CONFIRM THAT YOU HAVE APPROPRIATE PERMISSIONS TO WRITE TO THIS DIRECTORY.
+        ECHO *-*-*-*-*-*-*-*-*-*-*-*
+    )
+) ELSE (
+    ECHO *-*-*-*-*-*-*-*-*-*-*-*
+    ECHO *-*-*-*-*-*-*-*-*-*-*-*
+)
+
+ECHO GO START FIREFOX AND TRY!
+ECHO --------oo---oo---------
+ECHO -------o---o---o--------
+ECHO -------o-------o--------
+ECHO --------o-----o---------
+ECHO ---------o---o----------
+ECHO ----------oo------------
+ECHO JOB COMPLETE. CHECK THE TERMINAL FOR SUCCESS / FAILURE MESSAGES.
+ECHO REMEMBER TO CALL YOUR PARENTS!
+ECHO *-*-*-*-*-*-*-*-*-*-*-*
+
+PAUSE
